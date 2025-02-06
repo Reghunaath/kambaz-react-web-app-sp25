@@ -1,4 +1,3 @@
-import Dimensions from "./Dimensions";
 import "./index.css";
 export default function Positions() {
   return (
