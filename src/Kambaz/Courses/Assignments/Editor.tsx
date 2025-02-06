@@ -1,6 +1,46 @@
+import { FormControl, FormGroup, FormLabel, FormSelect } from "react-bootstrap";
+
 export default function AssignmentEditor() {
   return (
     <div id="wd-assignments-editor">
+      <FormGroup className="mb-3" controlId="wd-email">
+        <FormLabel>Assignment Name</FormLabel>
+        <FormControl value="A1" />
+      </FormGroup>
+      <FormGroup className="mb-3" controlId="wd-textarea">
+        <FormControl as="textarea" value="lorem ipsom" rows={3} />
+      </FormGroup>
+      <FormGroup
+        controlId="wd-points"
+        className="mb-3 d-flex align-items-center justify-content-end"
+      >
+        <FormLabel className="me-2 mb-0">Points</FormLabel>
+        <FormControl className="w-50" value="0" />
+      </FormGroup>
+      <FormGroup
+        controlId="wd-points"
+        className="mb-3 d-flex align-items-center justify-content-end"
+      >
+        <FormLabel className="me-2 mb-0">Assignment Group</FormLabel>
+        <FormSelect className="w-50">
+          <option selected>Group 1</option>
+          <option value="1">Group 1</option>
+          <option value="2">Group 2</option>
+          <option value="3">Group 3</option>
+        </FormSelect>
+      </FormGroup>
+      <FormGroup
+        controlId="wd-points"
+        className="mb-3 d-flex align-items-center justify-content-end"
+      >
+        <FormLabel className="me-2 mb-0">Display Grade as</FormLabel>
+        <FormSelect className="w-50">
+          <option selected>Percentage</option>
+          <option value="1">Percentage</option>
+          <option value="2">Points</option>
+        </FormSelect>
+      </FormGroup>
+      {""}
       <label htmlFor="wd-name">
         <b>Assignment Name</b>
       </label>{" "}
