@@ -1,5 +1,21 @@
-import { FormControl, FormGroup, FormLabel, FormSelect } from "react-bootstrap";
-
+import {
+  Button,
+  DropdownButton,
+  DropdownItem,
+  Form,
+  FormCheck,
+  FormControl,
+  FormGroup,
+  FormLabel,
+  FormSelect,
+} from "react-bootstrap";
+import Select from "react-select";
+const assignOptions = [
+  { value: "everyone", label: "Everyone" },
+  { value: "group1", label: "Group 1" },
+  { value: "group2", label: "Group 2" },
+  { value: "group3", label: "Group 3" },
+];
 export default function AssignmentEditor() {
   return (
     <div id="wd-assignments-editor">
@@ -18,7 +34,7 @@ export default function AssignmentEditor() {
         <FormControl className="w-50" value="0" />
       </FormGroup>
       <FormGroup
-        controlId="wd-points"
+        controlId="wd-group"
         className="mb-3 d-flex align-items-center justify-content-end"
       >
         <FormLabel className="me-2 mb-0">Assignment Group</FormLabel>
@@ -40,162 +56,75 @@ export default function AssignmentEditor() {
           <option value="2">Points</option>
         </FormSelect>
       </FormGroup>
-      {""}
-      <label htmlFor="wd-name">
-        <b>Assignment Name</b>
-      </label>{" "}
-      <br />
-      <input id="wd-name" value="A1 - ENV + HTML" />
-      <br />
-      <br />
-      <textarea id="wd-description" rows={10} cols={50}>
-        Lorem ipsum odor amet, consectetuer adipiscing elit. Venenatis odio
-        pulvinar leo viverra; amet sit maximus velit. Torquent platea non metus
-        ultrices ultrices lobortis natoque neque. Efficitur felis mollis integer
-        tellus parturient sollicitudin. Dis efficitur enim aptent senectus quis.
-        Habitasse leo tortor viverra nisl euismod. Torquent lorem nulla, cras
-        egestas conubia litora. Ac nibh scelerisque efficitur adipiscing
-        himenaeos sapien. Vitae dolor tellus scelerisque sollicitudin orci
-        aenean. Senectus pretium venenatis eleifend magnis ligula finibus.
-      </textarea>
-      <br />
-      <table>
-        <br />
-        <tr>
-          <td align="right" valign="top">
-            <label htmlFor="wd-points">Points</label>
-          </td>
-          <td>
-            <input id="wd-points" value={100} />
-          </td>
-        </tr>
-        <br />
-        <tr>
-          <td align="right" valign="top">
-            <label htmlFor="wd-group">Assignment Group</label>
-          </td>
-          <td>
-            <select id="wd-group" name="AssignmentGroup">
-              <option value="a1">Group 1</option>
-              <option value="a2">Group 2</option>
-              <option value="a3">Group 3</option>
-            </select>
-          </td>
-        </tr>
-        <br />
-        <tr>
-          <td align="right" valign="top">
-            <label htmlFor="wd-display-grade-as">Display Grade as</label>
-          </td>
-          <td>
-            <select id="wd-display-grade-as" name="GradeDisplay">
-              <option value="g1">Percentage</option>
-              <option value="g2">Points</option>
-            </select>
-          </td>
-        </tr>
-        <br />
-        <tr>
-          <td align="right" valign="top">
-            <label htmlFor="wd-submission-type">Submission Type</label>
-          </td>
-          <td>
-            <select id="wd-submission-type" name="Submission Type">
-              <option value="s1">Online</option>
-              <option value="s2">Offline</option>
-            </select>
-          </td>
-        </tr>
-        <br />
-        <tr>
-          <td align="right" valign="top"></td>
-          <td>
-            Online Entry Options
-            <br />
-            <input
-              type="checkbox"
-              id="wd-text-entry"
-              name="EntryOption"
-              value="Text Entry"
+      <FormGroup
+        controlId="wd-submission-type"
+        className="mb-3 d-flex  justify-content-end"
+      >
+        <FormLabel className="me-2 mb-0">Submission Type</FormLabel>
+        <div className="border rounded p-3 shadow-sm w-50">
+          <FormGroup className="mb-3">
+            <FormSelect>
+              <option>Online</option>
+              <option>Offline</option>
+            </FormSelect>
+          </FormGroup>
+          <FormLabel className="mb-2 fw-bold">Online Entry Options</FormLabel>
+          <FormGroup>
+            <FormCheck type="checkbox" label="Text Entry" />
+            <FormCheck type="checkbox" label="Website URL" defaultChecked />
+            <FormCheck type="checkbox" label="Media Recordings" />
+            <FormCheck type="checkbox" label="Student Annotation" />
+            <FormCheck type="checkbox" label="File Uploads" />
+          </FormGroup>
+        </div>
+      </FormGroup>
+      <FormGroup
+        controlId="wd-assign"
+        className="mb-3 d-flex  justify-content-end"
+      >
+        <FormLabel className="me-2 mb-0">Assign</FormLabel>
+        <div className="border rounded p-3 shadow-sm w-50">
+          <FormGroup className="mb-3">
+            <FormLabel className="fw-bold">Assign to</FormLabel>
+            <Select
+              options={assignOptions}
+              isMulti
+              defaultValue={[assignOptions[0]]}
             />
-            <label htmlFor="wd-text-entry">Text Entry</label>
-            <br />
-            <input
-              type="checkbox"
-              id="wd-website-url"
-              name="EntryOption"
-              value="Website URL"
-            />
-            <label htmlFor="wd-website-url">Website URL</label>
-            <br />
-            <input
-              type="checkbox"
-              id="wd-media-recordings"
-              name="EntryOption"
-              value="Media Recordings"
-            />
-            <label htmlFor="wd-media-recordings">Media Recordings</label>
-            <br />
-            <input
-              type="checkbox"
-              id="wd-student-annotation"
-              name="EntryOption"
-              value="Student Annotation"
-            />
-            <label htmlFor="wd-student-annotation">Student Annotation</label>
-            <br />
-            <input
-              type="checkbox"
-              id="wd-file-upload"
-              name="EntryOption"
-              value="Website URL"
-            />
-            <label htmlFor="wd-file-upload">File Uploads</label>
-          </td>
-        </tr>
-        <br />
-        <tr>
-          <td align="right" valign="top"></td>
-          <td>
-            <label htmlFor="wd-assign-to">Asign To</label>
-            <br />
-            <input id="wd-assign-to" value="Everyone" />
-          </td>
-        </tr>
-        <br />
-        <tr>
-          <td align="right" valign="top"></td>
-          <td>
-            <label htmlFor="wd-due-date">Due</label>
-            <br />
-            <input type="date" id="wd-due-date" name="due" value="2025-05-13" />
-          </td>
-        </tr>
-        <br />
-        <tr>
-          <td align="right" valign="top"></td>
-          <td>
-            <label htmlFor="wd-available-from">Available From</label>
-            <br />
-            <input
-              type="date"
-              id="wd-available-from"
-              name="Available From"
-              value="2025-05-06"
-            />
-          </td>
-          <td>
-            <label htmlFor="wd-available-until">Until</label>
-            <br />
-            <input
-              type="date"
-              id="wd-available-until"
-              name="Until"
-              value="2025-05-20"
-            />
-          </td>
-        </tr>
-      </table>
+          </FormGroup>
+          <FormGroup className="mb-3">
+            <FormLabel className="fw-bold">Due</FormLabel>
+            <FormControl type="datetime-local" />
+          </FormGroup>
+
+          <div className="d-flex gap-2">
+            <FormGroup className="w-50">
+              <FormLabel className="fw-bold">Available from</FormLabel>
+              <FormControl type="datetime-local" />
+            </FormGroup>
+
+            <FormGroup className="w-50">
+              <FormLabel className="fw-bold">Until</FormLabel>
+              <FormControl type="datetime-local" />
+            </FormGroup>
+          </div>
+        </div>
+      </FormGroup>
+      <hr />
+      <Button
+        variant="danger"
+        className="me-1 float-end"
+        id="wd-add-module-btn"
+      >
+        Save
+      </Button>
+      <Button
+        variant="secondary"
+        className="me-1 float-end"
+        id="wd-add-module-btn"
+      >
+        Cancel
+      </Button>
     </div>
   );
 }
