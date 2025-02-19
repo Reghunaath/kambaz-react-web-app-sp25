@@ -6,7 +6,9 @@ import {
   FormLabel,
   FormSelect,
 } from "react-bootstrap";
+import { useParams } from "react-router-dom";
 import Select from "react-select";
+import { assignments } from "../../Database";
 const assignOptions = [
   { value: "everyone", label: "Everyone" },
   { value: "group1", label: "Group 1" },
@@ -14,21 +16,25 @@ const assignOptions = [
   { value: "group3", label: "Group 3" },
 ];
 export default function AssignmentEditor() {
+  const { cid, aid } = useParams();
+  const assignment = assignments.find(
+    (assignment) => assignment._id === aid && assignment.course === cid
+  );
   return (
     <div id="wd-assignments-editor">
       <FormGroup className="mb-3" controlId="wd-email">
         <FormLabel>Assignment Name</FormLabel>
-        <FormControl value="A1" />
+        <FormControl value={assignment?.title} />
       </FormGroup>
       <FormGroup className="mb-3" controlId="wd-textarea">
-        <FormControl as="textarea" value="lorem ipsom" rows={3} />
+        <FormControl as="textarea" value={assignment?.description} rows={3} />
       </FormGroup>
       <FormGroup
         controlId="wd-points"
         className="mb-3 d-flex align-items-center justify-content-end"
       >
         <FormLabel className="me-2 mb-0">Points</FormLabel>
-        <FormControl className="w-50" value="0" />
+        <FormControl className="w-50" value={assignment?.points} />
       </FormGroup>
       <FormGroup
         controlId="wd-group"
@@ -91,13 +97,19 @@ export default function AssignmentEditor() {
           </FormGroup>
           <FormGroup className="mb-3">
             <FormLabel className="fw-bold">Due</FormLabel>
-            <FormControl type="datetime-local" />
+            <FormControl
+              type="datetime-local"
+              defaultValue={assignment?.due_date}
+            />
           </FormGroup>
 
           <div className="d-flex gap-2">
             <FormGroup className="w-50">
               <FormLabel className="fw-bold">Available from</FormLabel>
-              <FormControl type="datetime-local" />
+              <FormControl
+                type="datetime-local"
+                defaultValue={assignment?.available_date}
+              />
             </FormGroup>
 
             <FormGroup className="w-50">
