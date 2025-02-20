@@ -11,8 +11,38 @@ import LessonControlButtons from "../Modules/LessonControlButtons";
 import { BiCaretDown } from "react-icons/bi";
 import AssignmentControlButtons from "./AssignmentControlButtons";
 import { MdAssignment } from "react-icons/md";
+import { useParams } from "react-router-dom";
+import { assignments } from "../../Database";
 
 export default function Assignments() {
+  const { cid } = useParams();
+  const assignment = assignments.filter(
+    (assignment) => assignment.course === cid
+  );
+  const dateFormater = (s: string): string => {
+    const d = new Date(s);
+    const m = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ][d.getMonth()];
+    let h = d.getHours();
+    const min = d.getMinutes();
+    const per = h >= 12 ? "pm" : "am";
+    h = h % 12 || 12;
+    const hh = h < 10 ? `0${h}` : h;
+    const mm = min < 10 ? `0${min}` : min;
+    return `${m} ${d.getDate()} at ${hh}:${mm}${per}`;
+  };
   return (
     <div id="wd-assignments">
       <div className="d-flex justify-content-end align-items-center gap-2">
@@ -59,76 +89,36 @@ export default function Assignments() {
             <AssignmentControlButtons />
           </div>
           <ListGroup className="wd-lessons rounded-0">
-            <ListGroup.Item className="wd-lesson p-3 ps-1">
-              <div className="d-flex align-items-center">
-                <BsGripVertical className="me-2 fs-3" />
-                <MdAssignment className="me-2 fs-4 text-success" />
-                <div className="flex-grow-1">
-                  <a
-                    href="#/Kambaz/Courses/1234/Assignments/1"
-                    className="text-decoration-none text-reset fw-semibold"
-                  >
-                    A1
-                  </a>
-                  <br />
-                  <span className="fs-6 text-danger">Multiple Modules</span>
-                  <span className="fs-6">
-                    {" "}
-                    | Not available until May 6 at 12:00 AM |
-                  </span>
-                  <br />
-                  <span className="fs-6">Due May 13 at 11:59 PM | 100 pts</span>
+            {assignment.map((assig) => (
+              <ListGroup.Item className="wd-lesson p-3 ps-1">
+                <div className="d-flex align-items-center">
+                  <BsGripVertical className="me-2 fs-3" />
+                  <MdAssignment className="me-2 fs-4 text-success" />
+                  <div className="flex-grow-1">
+                    <a
+                      href={`#/Kambaz/Courses/${assig.course}/Assignments/${assig._id}`}
+                      className="text-decoration-none text-reset fw-semibold"
+                    >
+                      {assig.title}
+                    </a>
+                    <br />
+                    <span className="fs-6 text-danger">Multiple Modules</span>
+                    <span className="fs-6">
+                      {" "}
+                      | Not available until {dateFormater(
+                        assig.available_date
+                      )}{" "}
+                      |
+                    </span>
+                    <br />
+                    <span className="fs-6">
+                      Due {dateFormater(assig.due_date)} | {assig.points} pts
+                    </span>
+                  </div>
+                  <LessonControlButtons />
                 </div>
-                <LessonControlButtons />
-              </div>
-            </ListGroup.Item>
-
-            <ListGroup.Item className="wd-lesson p-3 ps-1">
-              <div className="d-flex align-items-center">
-                <BsGripVertical className="me-2 fs-3" />
-                <MdAssignment className="me-2 fs-4 text-success" />
-                <div className="flex-grow-1">
-                  <a
-                    href="#/Kambaz/Courses/1234/Assignments/2"
-                    className="text-decoration-none text-reset fw-semibold"
-                  >
-                    A2
-                  </a>
-                  <br />
-                  <span className="fs-6 text-danger">Multiple Modules</span>
-                  <span className="fs-6">
-                    {" "}
-                    | Not available until May 13 at 12:00 AM |
-                  </span>
-                  <br />
-                  <span className="fs-6">Due May 20 at 11:59 PM | 100 pts</span>
-                </div>
-                <LessonControlButtons />
-              </div>
-            </ListGroup.Item>
-            <ListGroup.Item className="wd-lesson p-3 ps-1">
-              <div className="d-flex align-items-center">
-                <BsGripVertical className="me-2 fs-3" />
-                <MdAssignment className="me-2 fs-4 text-success" />
-                <div className="flex-grow-1">
-                  <a
-                    href="#/Kambaz/Courses/1234/Assignments/3"
-                    className="text-decoration-none text-reset fw-semibold"
-                  >
-                    A3
-                  </a>
-                  <br />
-                  <span className="fs-6 text-danger">Multiple Modules</span>
-                  <span className="fs-6">
-                    {" "}
-                    | Not available until May 20 at 12:00 AM |
-                  </span>
-                  <br />
-                  <span className="fs-6">Due May 27 at 11:59 PM | 100 pts</span>
-                </div>
-                <LessonControlButtons />
-              </div>
-            </ListGroup.Item>
+              </ListGroup.Item>
+            ))}
           </ListGroup>
         </ListGroup.Item>
       </ListGroup>
