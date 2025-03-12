@@ -13,12 +13,15 @@ import AssignmentControlButtons from "./AssignmentControlButtons";
 import { MdAssignment } from "react-icons/md";
 import { useParams } from "react-router-dom";
 import { assignments } from "../../Database";
+import { useSelector } from "react-redux";
 
 export default function Assignments() {
   const { cid } = useParams();
   const assignment = assignments.filter(
     (assignment) => assignment.course === cid
   );
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const isFaculty = currentUser.role === "FACULTY";
   const dateFormater = (s: string): string => {
     const d = new Date(s);
     const m = [
@@ -57,28 +60,32 @@ export default function Assignments() {
             <FormControl placeholder="Search..." />
           </InputGroup>
         </FormGroup>
-        <Button
-          variant="secondary"
-          className="me-1 float-end"
-          id="wd-add-module-btn"
-        >
-          <FaPlus
-            className="position-relative me-2"
-            style={{ bottom: "1px" }}
-          />
-          Group
-        </Button>
-        <Button
-          variant="danger"
-          className="me-1 float-end"
-          id="wd-add-module-btn"
-        >
-          <FaPlus
-            className="position-relative me-2"
-            style={{ bottom: "1px" }}
-          />
-          Assignment
-        </Button>
+        {isFaculty && (
+          <>
+            <Button
+              variant="secondary"
+              className="me-1 float-end"
+              id="wd-add-module-btn"
+            >
+              <FaPlus
+                className="position-relative me-2"
+                style={{ bottom: "1px" }}
+              />
+              Group
+            </Button>
+            <Button
+              variant="danger"
+              className="me-1 float-end"
+              id="wd-add-module-btn"
+            >
+              <FaPlus
+                className="position-relative me-2"
+                style={{ bottom: "1px" }}
+              />
+              Assignment
+            </Button>
+          </>
+        )}
       </div>
       <br />
       <ListGroup className="rounded-0" id="wd-modules">
