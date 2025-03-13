@@ -5,7 +5,7 @@ import { addCourse, deleteCourse, updateCourse } from "./Courses/reducer";
 import { useState } from "react";
 import { addEnrollment, deleteEnrollment } from "./Courses/Enrollment/reducer";
 
-export default function Dashboard({ course }: { course: any }) {
+export default function Dashboard() {
   const dispatch = useDispatch();
   const [isEnrollment, setIsEnrollment] = useState(false);
   const [courseName, setCourseName] = useState("");
@@ -85,13 +85,13 @@ export default function Dashboard({ course }: { course: any }) {
           </h5>
           <br />
           <FormControl
-            placeholder={course.name}
+            placeholder="New Course"
             className="mb-2"
             onChange={(e) => setCourseName(e.target.value)}
           />
           <FormControl
             as="textarea"
-            placeholder={course.description}
+            placeholder="New Description"
             rows={3}
             onChange={(e) => setCourseDescription(e.target.value)}
           />

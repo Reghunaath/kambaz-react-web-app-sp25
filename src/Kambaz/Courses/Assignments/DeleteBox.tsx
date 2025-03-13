@@ -1,4 +1,4 @@
-import { Modal, FormControl, Button } from "react-bootstrap";
+import { Modal, Button } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 export default function DeleteBox({
   show,
