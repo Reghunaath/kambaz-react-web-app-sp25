@@ -6,9 +6,12 @@ import {
   FormLabel,
   FormSelect,
 } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Select from "react-select";
-import { assignments } from "../../Database";
+import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { addAssignment, updateAssignment } from "./reducer";
+import { v4 as uuidv4 } from "uuid";
 const assignOptions = [
   { value: "everyone", label: "Everyone" },
   { value: "group1", label: "Group 1" },
@@ -16,25 +19,71 @@ const assignOptions = [
   { value: "group3", label: "Group 3" },
 ];
 export default function AssignmentEditor() {
+  const navigate = useNavigate();
+  const { assignments } = useSelector((state: any) => state.assignmentReducer);
+  const dispatch = useDispatch();
   const { cid, aid } = useParams();
   const assignment = assignments.find(
-    (assignment) => assignment._id === aid && assignment.course === cid
+    (assignment: any) => assignment._id === aid && assignment.course === cid
   );
+
+  const [title, setTitle] = useState(assignment?.title ?? "");
+  const [description, setDescription] = useState(assignment?.description ?? "");
+  const [points, setPoints] = useState(assignment?.points ?? "");
+  const [due_date, setDue_date] = useState(assignment?.due_date ?? "");
+  const [available_date, setAvailable_date] = useState(
+    assignment?.available_date ?? ""
+  );
+  const handleSave = () => {
+    if (assignment) {
+      const updatedAssignment = {
+        ...assignment,
+        title,
+        description,
+        points,
+        due_date,
+        available_date,
+      };
+      dispatch(updateAssignment(updatedAssignment));
+    } else {
+      const newAssignment = {
+        title,
+        description,
+        points,
+        due_date,
+        available_date,
+        _id: uuidv4(),
+        course: cid,
+      };
+      dispatch(addAssignment(newAssignment));
+    }
+
+    navigate(`/Kambaz/Courses/${cid}/Assignments`);
+  };
   return (
     <div id="wd-assignments-editor">
       <FormGroup className="mb-3" controlId="wd-email">
         <FormLabel>Assignment Name</FormLabel>
-        <FormControl value={assignment?.title} />
+        <FormControl value={title} onChange={(e) => setTitle(e.target.value)} />
       </FormGroup>
       <FormGroup className="mb-3" controlId="wd-textarea">
-        <FormControl as="textarea" value={assignment?.description} rows={3} />
+        <FormControl
+          as="textarea"
+          onChange={(e) => setDescription(e.target.value)}
+          value={description}
+          rows={3}
+        />
       </FormGroup>
       <FormGroup
         controlId="wd-points"
         className="mb-3 d-flex align-items-center justify-content-end"
       >
         <FormLabel className="me-2 mb-0">Points</FormLabel>
-        <FormControl className="w-50" value={assignment?.points} />
+        <FormControl
+          className="w-50"
+          onChange={(e) => setPoints(e.target.value)}
+          value={points}
+        />
       </FormGroup>
       <FormGroup
         controlId="wd-group"
@@ -99,7 +148,8 @@ export default function AssignmentEditor() {
             <FormLabel className="fw-bold">Due</FormLabel>
             <FormControl
               type="datetime-local"
-              defaultValue={assignment?.due_date}
+              onChange={(e) => setDue_date(e.target.value)}
+              defaultValue={due_date}
             />
           </FormGroup>
 
@@ -108,7 +158,8 @@ export default function AssignmentEditor() {
               <FormLabel className="fw-bold">Available from</FormLabel>
               <FormControl
                 type="datetime-local"
-                defaultValue={assignment?.available_date}
+                defaultValue={available_date}
+                onChange={(e) => setAvailable_date(e.target.value)}
               />
             </FormGroup>
 
@@ -124,16 +175,19 @@ export default function AssignmentEditor() {
         variant="danger"
         className="me-1 float-end"
         id="wd-add-module-btn"
+        onClick={handleSave}
       >
         Save
       </Button>
-      <Button
-        variant="secondary"
-        className="me-1 float-end"
-        id="wd-add-module-btn"
-      >
-        Cancel
-      </Button>
+      <a href={`#/Kambaz/Courses/${cid}/Assignments`}>
+        <Button
+          variant="secondary"
+          className="me-1 float-end"
+          id="wd-add-module-btn"
+        >
+          Cancel
+        </Button>
+      </a>
     </div>
   );
 }

@@ -6,19 +6,29 @@ import {
   ListGroup,
 } from "react-bootstrap";
 import { BsGripVertical, BsSearch } from "react-icons/bs";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaTrash } from "react-icons/fa";
 import LessonControlButtons from "../Modules/LessonControlButtons";
 import { BiCaretDown } from "react-icons/bi";
 import AssignmentControlButtons from "./AssignmentControlButtons";
 import { MdAssignment } from "react-icons/md";
 import { useParams } from "react-router-dom";
-import { assignments } from "../../Database";
+import { useSelector } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
+import { deleteAssignment } from "./reducer";
+import DeleteBox from "./DeleteBox";
+import { useState } from "react";
 
 export default function Assignments() {
+  const [show, setShow] = useState(false);
+  const [deleteAssig, setDeleteAssig] = useState("");
+  const handleClose = () => setShow(false);
   const { cid } = useParams();
+  const { assignments } = useSelector((state: any) => state.assignmentReducer);
   const assignment = assignments.filter(
-    (assignment) => assignment.course === cid
+    (assignment: any) => assignment.course === cid
   );
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const isFaculty = currentUser.role === "FACULTY";
   const dateFormater = (s: string): string => {
     const d = new Date(s);
     const m = [
@@ -43,6 +53,7 @@ export default function Assignments() {
     const mm = min < 10 ? `0${min}` : min;
     return `${m} ${d.getDate()} at ${hh}:${mm}${per}`;
   };
+
   return (
     <div id="wd-assignments">
       <div className="d-flex justify-content-end align-items-center gap-2">
@@ -57,28 +68,37 @@ export default function Assignments() {
             <FormControl placeholder="Search..." />
           </InputGroup>
         </FormGroup>
-        <Button
-          variant="secondary"
-          className="me-1 float-end"
-          id="wd-add-module-btn"
-        >
-          <FaPlus
-            className="position-relative me-2"
-            style={{ bottom: "1px" }}
-          />
-          Group
-        </Button>
-        <Button
-          variant="danger"
-          className="me-1 float-end"
-          id="wd-add-module-btn"
-        >
-          <FaPlus
-            className="position-relative me-2"
-            style={{ bottom: "1px" }}
-          />
-          Assignment
-        </Button>
+        {isFaculty && (
+          <>
+            <Button
+              variant="secondary"
+              className="me-1 float-end"
+              id="wd-add-module-btn"
+            >
+              <FaPlus
+                className="position-relative me-2"
+                style={{ bottom: "1px" }}
+              />
+              Group
+            </Button>
+            <a
+              href={`#/Kambaz/Courses/${cid}/Assignments/${uuidv4()}`}
+              className="text-decoration-none text-reset fw-semibold"
+            >
+              <Button
+                variant="danger"
+                className="me-1 float-end"
+                id="wd-add-module-btn"
+              >
+                <FaPlus
+                  className="position-relative me-2"
+                  style={{ bottom: "1px" }}
+                />
+                Assignment
+              </Button>
+            </a>
+          </>
+        )}
       </div>
       <br />
       <ListGroup className="rounded-0" id="wd-modules">
@@ -89,18 +109,24 @@ export default function Assignments() {
             <AssignmentControlButtons />
           </div>
           <ListGroup className="wd-lessons rounded-0">
-            {assignment.map((assig) => (
+            {assignment.map((assig: any) => (
               <ListGroup.Item className="wd-lesson p-3 ps-1">
                 <div className="d-flex align-items-center">
                   <BsGripVertical className="me-2 fs-3" />
                   <MdAssignment className="me-2 fs-4 text-success" />
                   <div className="flex-grow-1">
-                    <a
-                      href={`#/Kambaz/Courses/${assig.course}/Assignments/${assig._id}`}
-                      className="text-decoration-none text-reset fw-semibold"
-                    >
-                      {assig.title}
-                    </a>
+                    {isFaculty ? (
+                      <a
+                        href={`#/Kambaz/Courses/${assig.course}/Assignments/${assig._id}`}
+                        className="text-decoration-none text-reset fw-semibold"
+                      >
+                        {assig.title}
+                      </a>
+                    ) : (
+                      <span className="text-decoration-none text-reset fw-semibold">
+                        {assig.title}
+                      </span>
+                    )}
                     <br />
                     <span className="fs-6 text-danger">Multiple Modules</span>
                     <span className="fs-6">
@@ -115,6 +141,16 @@ export default function Assignments() {
                       Due {dateFormater(assig.due_date)} | {assig.points} pts
                     </span>
                   </div>
+
+                  {isFaculty && (
+                    <FaTrash
+                      className="text-danger me-2 mb-1"
+                      onClick={() => {
+                        setDeleteAssig(assig._id);
+                        setShow(true);
+                      }}
+                    />
+                  )}
                   <LessonControlButtons />
                 </div>
               </ListGroup.Item>
@@ -122,6 +158,13 @@ export default function Assignments() {
           </ListGroup>
         </ListGroup.Item>
       </ListGroup>
+      <DeleteBox
+        show={show}
+        handleClose={handleClose}
+        dialogTitle="Delete Assignment"
+        deleteAssignment={deleteAssignment}
+        assignmentId={deleteAssig}
+      />
     </div>
   );
 }
