@@ -19,6 +19,7 @@ export default function Kambaz() {
     description: "New Description",
   });
   const addNewCourse = () => {
+    console.log("Adding new course:", course);
     setCourses([...courses, { ...course, _id: uuidv4() }]);
   };
   const deleteCourse = (courseId: any) => {

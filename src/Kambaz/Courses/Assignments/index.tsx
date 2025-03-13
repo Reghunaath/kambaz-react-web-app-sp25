@@ -12,13 +12,14 @@ import { BiCaretDown } from "react-icons/bi";
 import AssignmentControlButtons from "./AssignmentControlButtons";
 import { MdAssignment } from "react-icons/md";
 import { useParams } from "react-router-dom";
-import { assignments } from "../../Database";
 import { useSelector } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
 
 export default function Assignments() {
   const { cid } = useParams();
+  const { assignments } = useSelector((state: any) => state.assignmentReducer);
   const assignment = assignments.filter(
-    (assignment) => assignment.course === cid
+    (assignment: any) => assignment.course === cid
   );
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const isFaculty = currentUser.role === "FACULTY";
@@ -73,17 +74,22 @@ export default function Assignments() {
               />
               Group
             </Button>
-            <Button
-              variant="danger"
-              className="me-1 float-end"
-              id="wd-add-module-btn"
+            <a
+              href={`#/Kambaz/Courses/${cid}/Assignments/${uuidv4()}`}
+              className="text-decoration-none text-reset fw-semibold"
             >
-              <FaPlus
-                className="position-relative me-2"
-                style={{ bottom: "1px" }}
-              />
-              Assignment
-            </Button>
+              <Button
+                variant="danger"
+                className="me-1 float-end"
+                id="wd-add-module-btn"
+              >
+                <FaPlus
+                  className="position-relative me-2"
+                  style={{ bottom: "1px" }}
+                />
+                Assignment
+              </Button>
+            </a>
           </>
         )}
       </div>
@@ -96,7 +102,7 @@ export default function Assignments() {
             <AssignmentControlButtons />
           </div>
           <ListGroup className="wd-lessons rounded-0">
-            {assignment.map((assig) => (
+            {assignment.map((assig: any) => (
               <ListGroup.Item className="wd-lesson p-3 ps-1">
                 <div className="d-flex align-items-center">
                   <BsGripVertical className="me-2 fs-3" />
