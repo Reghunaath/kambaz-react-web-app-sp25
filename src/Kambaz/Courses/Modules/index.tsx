@@ -1,10 +1,8 @@
-import { v4 as uuidv4 } from "uuid";
 import ModulesControls from "./ModulesControls";
 import { BsGripVertical } from "react-icons/bs";
 import LessonControlButtons from "./LessonControlButtons";
 import ModuleControlButtons from "./ModuleControlButtons";
 import { useParams } from "react-router-dom";
-import * as db from "../../Database";
 import { useState } from "react";
 import { FormControl } from "react-bootstrap";
 import { addModule, editModule, updateModule, deleteModule } from "./reducer";
