@@ -37,6 +37,7 @@ export default function Dashboard() {
   };
   const deleteCourse = async (courseId: string) => {
     const status = await courseClient.deleteCourse(courseId);
+    console.log(status);
     setCourses(courses.filter((course) => course._id !== courseId));
   };
   const updateCourse = async () => {
