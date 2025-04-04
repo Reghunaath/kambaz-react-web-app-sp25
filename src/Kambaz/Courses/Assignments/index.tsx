@@ -12,21 +12,29 @@ import { BiCaretDown } from "react-icons/bi";
 import AssignmentControlButtons from "./AssignmentControlButtons";
 import { MdAssignment } from "react-icons/md";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
-import { deleteAssignment } from "./reducer";
+import { deleteAssignment, setAssignment } from "./reducer";
 import DeleteBox from "./DeleteBox";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import * as coursesClient from "../client";
 
 export default function Assignments() {
+  const dispatch = useDispatch();
   const [show, setShow] = useState(false);
   const [deleteAssig, setDeleteAssig] = useState("");
   const handleClose = () => setShow(false);
   const { cid } = useParams();
   const { assignments } = useSelector((state: any) => state.assignmentReducer);
-  const assignment = assignments.filter(
-    (assignment: any) => assignment.course === cid
-  );
+  const fetchAssigmnets = async () => {
+    const assignments = await coursesClient.findAssignmentsForCourse(
+      cid as string
+    );
+    dispatch(setAssignment(assignments));
+  };
+  useEffect(() => {
+    fetchAssigmnets();
+  }, []);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const isFaculty = currentUser.role === "FACULTY";
   const dateFormater = (s: string): string => {
@@ -109,7 +117,7 @@ export default function Assignments() {
             <AssignmentControlButtons />
           </div>
           <ListGroup className="wd-lessons rounded-0">
-            {assignment.map((assig: any) => (
+            {assignments.map((assig: any) => (
               <ListGroup.Item className="wd-lesson p-3 ps-1">
                 <div className="d-flex align-items-center">
                   <BsGripVertical className="me-2 fs-3" />
@@ -145,8 +153,9 @@ export default function Assignments() {
                   {isFaculty && (
                     <FaTrash
                       className="text-danger me-2 mb-1"
-                      onClick={() => {
+                      onClick={async () => {
                         setDeleteAssig(assig._id);
+                        await coursesClient.deleteModule(assig._id);
                         setShow(true);
                       }}
                     />

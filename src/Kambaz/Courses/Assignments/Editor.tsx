@@ -8,10 +8,9 @@ import {
 } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import Select from "react-select";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useState } from "react";
-import { addAssignment, updateAssignment } from "./reducer";
-import { v4 as uuidv4 } from "uuid";
+import { createAssignmentForCourse } from "../client";
 const assignOptions = [
   { value: "everyone", label: "Everyone" },
   { value: "group1", label: "Group 1" },
@@ -21,8 +20,7 @@ const assignOptions = [
 export default function AssignmentEditor() {
   const navigate = useNavigate();
   const { assignments } = useSelector((state: any) => state.assignmentReducer);
-  const dispatch = useDispatch();
-  const { cid, aid } = useParams();
+  const { cid = "", aid } = useParams();
   const assignment = assignments.find(
     (assignment: any) => assignment._id === aid && assignment.course === cid
   );
@@ -44,7 +42,7 @@ export default function AssignmentEditor() {
         due_date,
         available_date,
       };
-      dispatch(updateAssignment(updatedAssignment));
+      createAssignmentForCourse(cid, updatedAssignment);
     } else {
       const newAssignment = {
         title,
@@ -52,10 +50,9 @@ export default function AssignmentEditor() {
         points,
         due_date,
         available_date,
-        _id: uuidv4(),
         course: cid,
       };
-      dispatch(addAssignment(newAssignment));
+      createAssignmentForCourse(cid, newAssignment);
     }
 
     navigate(`/Kambaz/Courses/${cid}/Assignments`);
