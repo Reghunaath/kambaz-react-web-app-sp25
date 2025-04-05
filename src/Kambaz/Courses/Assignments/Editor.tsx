@@ -8,9 +8,10 @@ import {
 } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import Select from "react-select";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { createAssignmentForCourse } from "../client";
+import { setAssignment } from "./reducer";
 const assignOptions = [
   { value: "everyone", label: "Everyone" },
   { value: "group1", label: "Group 1" },
@@ -18,6 +19,7 @@ const assignOptions = [
   { value: "group3", label: "Group 3" },
 ];
 export default function AssignmentEditor() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { assignments } = useSelector((state: any) => state.assignmentReducer);
   const { cid = "", aid } = useParams();
@@ -43,6 +45,7 @@ export default function AssignmentEditor() {
         available_date,
       };
       createAssignmentForCourse(cid, updatedAssignment);
+      dispatch(setAssignment([...assignments, updatedAssignment]));
     } else {
       const newAssignment = {
         title,
@@ -53,6 +56,7 @@ export default function AssignmentEditor() {
         course: cid,
       };
       createAssignmentForCourse(cid, newAssignment);
+      dispatch(setAssignment([...assignments, newAssignment]));
     }
 
     navigate(`/Kambaz/Courses/${cid}/Assignments`);
