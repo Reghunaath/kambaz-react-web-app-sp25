@@ -59,7 +59,9 @@ export default function AssignmentEditor() {
       dispatch(setAssignment([...assignments, newAssignment]));
     }
 
-    navigate(`/Kambaz/Courses/${cid}/Assignments`);
+    setTimeout(() => {
+      navigate(`/Kambaz/Courses/${cid}/Assignments`);
+    }, 500);
   };
   return (
     <div id="wd-assignments-editor">
