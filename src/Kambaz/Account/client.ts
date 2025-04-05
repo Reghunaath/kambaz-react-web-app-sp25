@@ -45,3 +45,11 @@ export const signout = async () => {
   const response = await axiosWithCredentials.post(`${USERS_API}/signout`);
   return response.data;
 };
+export const enroll_unenroll = async (course_id: any) => {
+  const body = { _id: course_id };
+  const response = await axiosWithCredentials.post(
+    `${USERS_API}/current/courses/enroll`,
+    body
+  );
+  return response.data;
+};
