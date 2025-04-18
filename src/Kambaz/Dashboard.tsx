@@ -18,7 +18,7 @@ export default function Dashboard() {
   const [allCourses, setAllCourses] = useState<any[]>([]);
   const fetchCourses = async () => {
     try {
-      const courses = await userClient.findMyCourses();
+      const courses = await userClient.findCoursesForUser(currentUser._id);
       const allCourses = await courseClient.fetchAllCourses();
       setCourses(courses);
       setAllCourses(allCourses);
@@ -31,7 +31,7 @@ export default function Dashboard() {
   }, [currentUser]);
 
   const addNewCourse = async (coursenew: any) => {
-    const newCourse = await userClient.createCourse(coursenew);
+    const newCourse = await courseClient.createCourse(coursenew);
     setCourses([...courses, newCourse]);
     setAllCourses([...allCourses, newCourse]);
   };
