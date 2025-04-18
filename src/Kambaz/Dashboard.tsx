@@ -32,6 +32,7 @@ export default function Dashboard() {
 
   const addNewCourse = async (coursenew: any) => {
     const newCourse = await courseClient.createCourse(coursenew);
+    userClient.enroll_unenroll(newCourse._id);
     setCourses([...courses, newCourse]);
     setAllCourses([...allCourses, newCourse]);
   };
@@ -40,12 +41,12 @@ export default function Dashboard() {
     console.log(status);
     setCourses(courses.filter((course) => course._id !== courseId));
   };
-  const updateCourse = async () => {
-    await courseClient.updateCourse(course);
+  const updateCourse = async (updatedCourse: any) => {
+    await courseClient.updateCourse(updatedCourse);
     setCourses(
       courses.map((c) => {
-        if (c._id === course._id) {
-          return course;
+        if (c._id === updatedCourse._id) {
+          return updatedCourse;
         } else {
           return c;
         }
@@ -105,12 +106,13 @@ export default function Dashboard() {
               id="wd-update-course-click"
               onClick={(event) => {
                 event.preventDefault();
-                setCourse({
+                const updatedCourse = {
                   _id: courseId,
                   name: courseName,
                   description: courseDescription,
-                });
-                updateCourse();
+                };
+                setCourse(updatedCourse);
+                updateCourse(updatedCourse);
               }}
             >
               Update
